@@ -1,0 +1,43 @@
+{
+    "env": "dev",
+    "dev": {
+        "dbconfig": {
+            "client": "mysql2",
+            "connection": {
+                "host": "127.0.0.1",
+                "user": "root",
+                "password": "root",
+                "database": "dev_notification"
+            }
+        },
+        "siteUrl" : "http://localhost:3000",
+        "basURL" : "/url",
+        "version" : "v1"
+    },
+    "staging": {
+        "dbconfig": {
+            "client": "mysql2",
+            "connection": {
+                "host": "127.0.0.1",
+                "user": "root",
+                "password": "root",
+                "database": "test"
+            }
+        },
+        "basURL" : "/db",
+        "version" : "v1"
+    },
+    "prod": {
+        "dbconfig": {
+            "client": "mysql2",
+            "connection": {
+                "host": "127.0.0.1",
+                "user": "root",
+                "password": "root",
+                "database": "test"
+            }
+        },
+        "basURL" : "/db",
+        "version" : "v1"
+    }
+}

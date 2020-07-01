@@ -1,1 +1,150 @@
 {{>header}}
+<div class="main-content">
+  <div>
+    <span>
+      Shorten your <span>Urls</span>
+    </span>
+  </div>
+  <div>
+    <div>
+      <input type="text" id="url" placeholder="Enter long url here ..." />
+      <button onclick="shortenMe()"><i class="fas fa-arrow-right"></i></button>
+    </div>
+    <div id="shortcontain">
+      <a id="short" href="">
+      </a>
+    </div>
+  </div>
+</div>
+<div class="line"></div>
+<div class="analytics-content">
+  <div>
+    <span>
+      Analytics for short urls
+    </span>
+    <div>
+      <input type="text" id="urlAnalytics" placeholder="Enter short url here ..." />
+      <button onclick="getAnalytics()"><i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+  <div id="analytics-right" class="hidden">
+    <div>
+      <div>
+        <h1 class="title">Total Visits</h1>
+        <p id="count">123</p>
+      </div>
+      <div>
+        <h1 class="title">Created On</h1>
+        <p id="created">123</p>
+      </div>
+    </div>
+    <div>
+      <h1 class="title">Visits in last hour</h1>
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const oneday = 60 * 60 * 24 * 1000;
+  let config = {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: "Count",
+        backgroundColor: "#fff",
+        borderColor: "rgb(116, 116, 255)",
+        data: [],
+        fill: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Last nth hour'
+          }
+        },
+        y: {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Count'
+          }
+        }
+      }
+    }
+  };
+
+  function shortenMe() {
+    const value = document.getElementById("url").value.trim();
+    if (!value) return;
+    fetch("http://localhost:3000/api/v1/shorten", {
+      method: "post",
+      body: JSON.stringify({
+        long_url: value
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(res => res.json()).then(res => {
+      const short = res.data.short_url;
+      let elem1 = document.getElementById("shortcontain");
+      elem1.classList.add("contains");
+      let elem = document.getElementById("short");
+      elem.innerHTML = short;
+      elem.href = short;
+    })
+  }
+  function getAnalytics() {
+    const value = document.getElementById("urlAnalytics").value.trim();
+    if (!value) return;
+    fetch("http://localhost:3000/api/v1/analytics", {
+      method: "post",
+      body: JSON.stringify({
+        short_url: value.split("/").reverse()[0]
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(res => res.json()).then(res => {
+      let m = new Date();
+      let data = res.data
+      let elem0 = document.getElementById("analytics-right");
+      elem0.classList.remove("hidden");
+      let elem1 = document.getElementById("count");
+      let elem2 = document.getElementById("created");
+      elem1.innerHTML = data.count;
+      elem2.innerHTML = new Date(data.created).toLocaleString();
+      let ll = data.last24.filter(item => new Date(item.date) < (Date.now() + oneday))
+      ll = ll.map(item => new Date(item.date));
+      console.log("ll");
+      console.log(ll);
+      let graphData = {}
+      let labels = Array(24).fill(0).map((_, i) => {
+        graphData[i] = 0;
+        return i
+      });
+      config.data.labels = labels;
+
+      ll.forEach(item => {
+        graphData[item.getHours() - m.getHours()]++;
+      });
+      console.log(graphData)
+      let actualData = []
+      for (let i = 0; i < 24; i++) {
+        actualData.push(graphData[i])
+      }
+      console.log(actualData)
+      config.data.datasets[0].data = actualData;
+
+      const ctx = document.getElementById('canvas').getContext('2d');
+      window.myLine = new Chart(ctx, config);
+    })
+  }
+</script>

@@ -10,7 +10,7 @@
                 "database": "sql12351806"
             }
         },
-        "siteUrl" : "https://tragically-bunnyhug-11257.herokuapp.com/",
+        "siteUrl" : "https://tragically-bunnyhug-11257.herokuapp.com",
         "basURL" : "/url",
         "version" : "v1"
     },

@@ -84,7 +84,7 @@
   function shortenMe() {
     const value = document.getElementById("url").value.trim();
     if (!value) return;
-    fetch("https://tragically-bunnyhug-11257.herokuapp.com//v1/shorten", {
+    fetch("https://tragically-bunnyhug-11257.herokuapp.com/api/v1/shorten", {
       method: "post",
       body: JSON.stringify({
         long_url: value

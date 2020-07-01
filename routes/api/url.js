@@ -73,6 +73,26 @@ const expander = async (req, res) => {
   const id = +getLong(shortUrl);
   const record = await db.get(Url, id);
   if (!record) {
+    return res.redirect("/");
+    // const response = getResponseBody(
+    //   failure,
+    //   "LONG_FAIL",
+    //   "Failed to expand the short Url!"
+    // );
+    // return res.status(response.statusCode).json(response);
+  }
+  await db.post(Stats, { url_id: id });
+  await db.put(Url, id, { visits: record.visits + 1 });
+  return res.redirect(record.long_url);
+};
+const analytics = async (req, res) => {
+  const shortUrl = req.body.short_url;
+  const id = +getLong(shortUrl);
+  const record1 = await db.get(Url, id);
+  const record = await db.getWhere(Stats, {
+    url_id: +id,
+  });
+  if (!record) {
     const response = getResponseBody(
       failure,
       "LONG_FAIL",
@@ -80,18 +100,23 @@ const expander = async (req, res) => {
     );
     return res.status(response.statusCode).json(response);
   }
-  await db.post(Stats, { url_id: id });
-  await db.put(Url, id, { visits: record.visits + 1 });
-  return res.redirect(record.long_url);
+  const nn = new Date();
+  const response = getResponseBody(success, "ANAL_OK", {
+    count: record.length,
+    created: record1.created_at,
+    last24: record.filter((item) => item),
+  });
+  return res.json(response);
 };
 
 const main = (req, res) => {
-  return res.render('main')
+  return res.render("main");
   // return res.sendFile(path.join(__dirname, "public", "index.html"));
 };
 
 router.get("/", main);
 router.get("/:shortUrl", expander);
 router.post("/api/v1/shorten", shortener);
+router.post("/api/v1/analytics", analytics);
 
 module.exports = router;

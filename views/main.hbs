@@ -138,6 +138,8 @@
         return Math.abs(Math.round(diff));
       }
       ll.forEach(item => {
+        console.log(m,item)
+        console.log(diff_hours(m, item))
         graphData[diff_hours(m, item)]++;
       });
       console.log(graphData)

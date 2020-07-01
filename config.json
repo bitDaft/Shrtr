@@ -4,10 +4,10 @@
         "dbconfig": {
             "client": "mysql2",
             "connection": {
-                "host": "127.0.0.1",
-                "user": "root",
-                "password": "root",
-                "database": "dev_notification"
+                "host": "sql12.freemysqlhosting.net",
+                "user": "sql12351806",
+                "password": "LujvpgZMae",
+                "database": "sql12351806"
             }
         },
         "siteUrl" : "https://tragically-bunnyhug-11257.herokuapp.com/",

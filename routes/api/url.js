@@ -81,7 +81,7 @@ const expander = async (req, res) => {
     // );
     // return res.status(response.statusCode).json(response);
   }
-  await db.post(Stats, { url_id: id });
+  await db.post(Stats, { url_id: id, date: new Date() });
   await db.put(Url, id, { visits: record.visits + 1 });
   return res.redirect(record.long_url);
 };
@@ -111,7 +111,6 @@ const analytics = async (req, res) => {
 
 const main = (req, res) => {
   return res.render("main");
-  // return res.sendFile(path.join(__dirname, "public", "index.html"));
 };
 
 router.get("/", main);

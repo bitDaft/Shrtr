@@ -116,42 +116,42 @@
       let m = new Date();
       let data = res.data
       let elem0 = document.getElementById("analytics-right");
-      elem0.classList.remove("hidden");
-      let elem1 = document.getElementById("count");
-      let elem2 = document.getElementById("created");
-      elem1.innerHTML = data.count;
-      elem2.innerHTML = new Date(data.created).toLocaleString();
-      let ll = data.last24.filter(item => new Date(item.date) < (Date.now() + oneday))
-      ll = ll.map(item => new Date(item.date));
-      console.log("ll");
-      console.log(ll);
-      let graphData = {}
-      let labels = Array(24).fill(0).map((_, i) => {
-        graphData[i] = 0;
-        return i
-      });
-      config.data.labels = labels;
+    elem0.classList.remove("hidden");
+    let elem1 = document.getElementById("count");
+    let elem2 = document.getElementById("created");
+    elem1.innerHTML = data.count;
+    elem2.innerHTML = new Date(data.created).toLocaleString();
+    let ll = data.last24.filter(item => new Date(item.date) < (Date.now() + oneday))
+    ll = ll.map(item => new Date(item.date));
+    console.log("ll");
+    console.log(ll);
+    let graphData = {}
+    let labels = Array(24).fill(0).map((_, i) => {
+      graphData[i] = 0;
+      return i
+    });
+    config.data.labels = labels;
 
-      function diff_hours(dt2, dt1) {
-        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-        diff /= (60 * 60);
-        return Math.abs(Math.round(diff));
-      }
-      ll.forEach(item => {
-        console.log(m,item)
-        console.log(diff_hours(m, item))
-        graphData[diff_hours(m, item)]++;
-      });
-      console.log(graphData)
-      let actualData = []
-      for (let i = 0; i < 24; i++) {
-        actualData.push(graphData[i])
-      }
-      console.log(actualData)
-      config.data.datasets[0].data = actualData;
+    function diff_hours(dt2, dt1) {
+      var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+      diff /= (60 * 60);
+      return Math.abs(Math.round(diff));
+    }
+    ll.forEach(item => {
+      console.log(m, item)
+      console.log(diff_hours(m, item))
+      graphData[diff_hours(m, item)]++;
+    });
+    console.log(graphData)
+    let actualData = []
+    for (let i = 0; i < 24; i++) {
+      actualData.push(graphData[i])
+    }
+    console.log(actualData)
+    config.data.datasets[0].data = actualData;
 
-      const ctx = document.getElementById('canvas').getContext('2d');
-      window.myLine = new Chart(ctx, config);
-    })
+    const ctx = document.getElementById('canvas').getContext('2d');
+    window.myLine = new Chart(ctx, config);
+  })
   }
 </script>

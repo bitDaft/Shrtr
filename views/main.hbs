@@ -84,7 +84,7 @@
   function shortenMe() {
     const value = document.getElementById("url").value.trim();
     if (!value) return;
-    fetch("http://localhost:3000/api/v1/shorten", {
+    fetch("https://tragically-bunnyhug-11257.herokuapp.com//v1/shorten", {
       method: "post",
       body: JSON.stringify({
         long_url: value
@@ -104,7 +104,7 @@
   function getAnalytics() {
     const value = document.getElementById("urlAnalytics").value.trim();
     if (!value) return;
-    fetch("http://localhost:3000/api/v1/analytics", {
+    fetch("https://tragically-bunnyhug-11257.herokuapp.com/api/v1/analytics", {
       method: "post",
       body: JSON.stringify({
         short_url: value.split("/").reverse()[0]
